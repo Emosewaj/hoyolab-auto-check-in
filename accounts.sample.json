@@ -1,0 +1,14 @@
+[
+    {
+        "identifier": "Username/Displayname",
+        "ltoken": "abcdefghijklmnopqrstuvwxyz0123456789ABCD",
+        "ltuid": 12345678,
+        "announce": true
+    },
+    {
+        "identifier": "Username/Displayname",
+        "ltoken": "abcdefghijklmnopqrstuvwxyz0123456789ABCD",
+        "ltuid": 12345678,
+        "announce": true
+    }
+]
