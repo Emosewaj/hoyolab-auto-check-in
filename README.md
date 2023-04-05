@@ -12,3 +12,14 @@ Time zones for daily server resets:
 - Asia: GMT+8
 - Europe: GMT+1
 - America: GMT-5 
+
+### How to get `ltoken` and `ltuid`
+
+**WARNING:** Only give these to people you absolutely trust and store them responsibly! They can be used to gain full access to the person's account on HoYoLab!
+
+1. Login to [HoYoLab](https://www.hoyolab.com/)
+2. Open Dev Tools and find where the Cookies are
+   - Firefox: Storage -> Cookies -> https://www.hoyolab.com/
+   - Chrome/Opera (GX)/Edge: Application -> Cookies -> https://www.hoyolab.com/
+   - Others: https://google.com/
+3. Find the cookies by the names of `ltoken` and `ltuid` and copy them to your `accounts.json`
