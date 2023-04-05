@@ -5,7 +5,7 @@ const discordWebhookUrl = "";
 const awardStore = [];
 
 /**
- * See accounts.sample.json to see how to set this up accounts for this tool.
+ * See accounts.sample.json to see how to set up accounts for this tool.
  * 
  * @typedef {Object} Account
  * @property {string} identifier
