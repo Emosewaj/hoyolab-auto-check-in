@@ -8,7 +8,7 @@ https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e20210225193148
 - Configure accounts in an `accounts.json` file, see [`accounts.sample.json`](/accounts.sample.json) on what structure to follow
 - Run as a scheduled task (like a [cronjob](https://crontab.guru/)) as `node genshin-impact-auto-check-in.js`.
 
-Time zones for daily server resets:
+Server reset is always at 4am local time. Time zones for daily server resets are as follows:
 - Asia: GMT+8
 - Europe: GMT+1
 - America: GMT-5 
