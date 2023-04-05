@@ -23,3 +23,6 @@ Server reset is always at 4am local time. Time zones for daily server resets are
    - Chrome/Opera (GX)/Edge: Application -> Cookies -> https://www.hoyolab.com/
    - Others: https://google.com/
 3. Find the cookies by the names of `ltoken` and `ltuid` and copy them to your `accounts.json`
+
+`ltoken` should be 40 characters, [A-Za-Z0-9].  
+`ltuid` should be 8+ numeric characters.
