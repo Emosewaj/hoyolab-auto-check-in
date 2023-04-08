@@ -4,6 +4,8 @@ Tool to automatically check in on HoYoLab's daily Genshin check-in.
 
 https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e202102251931481
 
+Requires NodeJS version idfk, any? It only uses https ¯\\\_(ツ)\_/¯
+
 ## Setup
 
 - (Optional) Configure discord webhook in `genshin-impact-auto-check-in.js` to receive reports
