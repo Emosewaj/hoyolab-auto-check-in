@@ -4,14 +4,15 @@ Tool to automatically check in on HoYoLab's daily Genshin check-in.
 
 https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e202102251931481
 
+## Setup
+
 - (Optional) Configure discord webhook in `genshin-impact-auto-check-in.js` to receive reports
 - Configure accounts in an `accounts.json` file, see [`accounts.sample.json`](/accounts.sample.json) on what structure to follow
 - Run as a scheduled task (like a [cronjob](https://crontab.guru/)) as `node genshin-impact-auto-check-in.js`.
 
-Server reset is always at 4am local time. Time zones for daily server resets are as follows:
-- Asia: GMT+8
-- Europe: GMT+1
-- America: GMT-5 
+### When to run
+
+The daily check-in resets every day at midnight China Standard Time (GMT+8). To make up for clock inaccuracies and runtime, I recommend setting the script up to run an five minutes after their midnight. Make sure to remember that China does not use daylight savings! If you're currently not in DST, run the script an hour and five minutes after their midnight instead to make up for the time difference.
 
 ### How to get `ltoken` and `ltuid`
 
