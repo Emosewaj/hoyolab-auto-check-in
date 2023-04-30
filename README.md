@@ -1,16 +1,17 @@
-# Genshin Impact Auto Check-In
+# HoYoLab Auto Check-In
 
-Tool to automatically check in on HoYoLab's daily Genshin check-in.
+Tool to automatically check in on HoYoLab's daily Genshin Impact and Honkai: Star Rail check-in.
 
 https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e202102251931481
+https://act.hoyolab.com/bbs/event/signin/hkrpg/index.html?act_id=e202303301540311
 
 Requires NodeJS version idfk, any? It only uses https ¯\\\_(ツ)\_/¯
 
 ## Setup
 
-- (Optional) Configure discord webhook in `genshin-impact-auto-check-in.js` to receive reports
+- (Optional) Configure discord webhook in `hoyolab-auto-check-in.js` to receive reports
 - Configure accounts in an `accounts.json` file, see [`accounts.sample.json`](/accounts.sample.json) on what structure to follow
-- Run as a scheduled task (like a [cronjob](https://crontab.guru/)) as `node genshin-impact-auto-check-in.js`.
+- Run as a scheduled task (like a [cronjob](https://crontab.guru/)) as `node hoyolab-auto-check-in.js`.
 
 ### When to run
 
