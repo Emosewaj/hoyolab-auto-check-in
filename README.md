@@ -2,7 +2,7 @@
 
 Tool to automatically check in on HoYoLab's daily Genshin Impact and Honkai: Star Rail check-in.
 
-https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e202102251931481
+https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e202102251931481  
 https://act.hoyolab.com/bbs/event/signin/hkrpg/index.html?act_id=e202303301540311
 
 Requires NodeJS version idfk, any? It only uses https ¯\\\_(ツ)\_/¯
