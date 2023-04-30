@@ -26,6 +26,23 @@ const awardStore = [];
  */
 const accounts = require("./accounts.json");
 
+const api = {
+    genshinImpact: {
+        baseUrl: "https://sg-hk4e-api.hoyolab.com/event/sol/",
+        actId: "e202102251931481",
+        awards: "home",
+        signInInfo: "info",
+        signIn: "sign"
+    },
+    honkaiStarRail: {
+        baseUrl: "https://sg-public-api.hoyolab.com/event/luna/os/",
+        actId: "e202303301540311",
+        awards: "home",
+        signInInfo: "info",
+        signIn: "sign"
+    }
+};
+
 async function main() {
     let report = [];
 
@@ -46,7 +63,7 @@ async function main() {
 
         // This whole part is optional, but nice to have as to not rely on error messages of the POST request
         console.log(`Checking sign info for ${account.identifier}...`);
-        let signInInfo = await get("https://sg-hk4e-api.hoyolab.com/event/sol/resign_info?act_id=e202102251931481", headers);
+        let signInInfo = await get("https://sg-hk4e-api.hoyolab.com/event/sol/info?act_id=e202102251931481", headers);
         let signInInfoJson = JSON.parse(signInInfo.bodyData);
 
         if (!signInInfo || signInInfoJson.retcode != 0) {
@@ -63,7 +80,7 @@ async function main() {
             continue;
         }
 
-        if (signInInfoJson.data.signed) {
+        if (signInInfoJson.data.is_sign) {
             console.warn(`${account.identifier} has already been signed in!`);
             report.push(`${account.identifier}: Already signed in today`);
 

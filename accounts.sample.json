@@ -1,14 +1,17 @@
-[
-    {
+[{
         "identifier": "Username/Displayname",
         "ltoken": "abcdefghijklmnopqrstuvwxyz0123456789ABCD",
         "ltuid": 12345678,
-        "announce": true
+        "announce": true,
+        "genshin-impact": true,
+        "honkai-star-rail": true
     },
     {
         "identifier": "Username/Displayname",
         "ltoken": "abcdefghijklmnopqrstuvwxyz0123456789ABCD",
         "ltuid": 12345678,
-        "announce": true
+        "announce": true,
+        "genshin-impact": true,
+        "honkai-star-rail": true
     }
 ]
