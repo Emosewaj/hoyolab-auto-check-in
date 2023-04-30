@@ -2,7 +2,7 @@ const https = require("https");
 
 // Leave empty to disable reports
 const discordWebhookUrl = "";
-const awardStore = [];
+let awardStore = [];
 
 /**
  * See accounts.sample.json to see how to set up accounts for this tool.
@@ -12,6 +12,8 @@ const awardStore = [];
  * @property {string} ltoken
  * @property {number} ltuid
  * @property {boolean} announce
+ * @property {boolean} genshinImpact
+ * @property {boolean} honkaiStarRail
  */
 
 /**
@@ -32,85 +34,97 @@ const api = {
         actId: "e202102251931481",
         awards: "home",
         signInInfo: "info",
-        signIn: "sign"
+        signIn: "sign",
+        name: "Genshin Impact"
     },
     honkaiStarRail: {
         baseUrl: "https://sg-public-api.hoyolab.com/event/luna/os/",
         actId: "e202303301540311",
         awards: "home",
         signInInfo: "info",
-        signIn: "sign"
+        signIn: "sign",
+        name: "Honkai: Star Rail"
     }
 };
 
 async function main() {
     let report = [];
 
-    console.log("Fetching awards...");
-    let awardsInfo = await get("https://sg-hk4e-api.hoyolab.com/event/sol/home?lang=en-us&act_id=e202102251931481");
-    let awardsInfoJson = JSON.parse(awardsInfo.bodyData);
+    for (let game in api) {
+        console.log(`===== ${api[game].name} =====`);
+        report.push(`__*${api[game].name}*__`);
 
-    if (awardsInfo && awardsInfoJson.retcode == 0)
-        setAwards(awardsInfoJson.data.awards);
+        console.log("Fetching awards...");
+        let awardsInfo = await get(api[game].baseUrl + api[game].awards + "?lang=en-us&act_id=" + api[game].actId);
+        let awardsInfoJson = JSON.parse(awardsInfo.bodyData);
 
-    console.log(awardStore.length + " awards fetched");
+        if (awardsInfo && awardsInfoJson.retcode == 0)
+            setAwards(awardsInfoJson.data.awards);
 
-    for (const account of accounts) {
-        // Auth Headers used for every request. I have no idea if these expire eventually or if they're valid permanently. We'll see.
-        let headers = {
-            Cookie: `ltoken=${account.ltoken};ltuid=${account.ltuid}`
+        console.log(awardStore.length + " awards fetched");
+
+        for (const account of accounts) {
+            if (!account[game])
+                continue;
+
+            // Auth Headers used for every request. I have no idea if these expire eventually or if they're valid permanently. We'll see.
+            let headers = {
+                Cookie: `ltoken=${account.ltoken};ltuid=${account.ltuid}`
+            }
+
+            // This whole part is optional, but nice to have as to not rely on error messages of the POST request
+            console.log(`Checking sign info for ${account.identifier}...`);
+            let signInInfo = await get(api[game].baseUrl + api[game].signInInfo + "?lang=en-us&act_id=" + api[game].actId, headers);
+            let signInInfoJson = JSON.parse(signInInfo.bodyData);
+
+            if (!signInInfo || signInInfoJson.retcode != 0) {
+                let warning = `Failed to get sign info for ${account.identifier}: `;
+
+                if (!signInInfo)
+                    warning += "Request error, see previous error";
+                else
+                    warning += signInInfoJson.message;
+
+                console.warn(warning);
+                report.push(`${account.identifier}: Failed getting sign-in info`);
+
+                continue;
+            }
+
+            if (signInInfoJson.data.is_sign) {
+                console.warn(`${account.identifier} has already been signed in!`);
+                report.push(`${account.identifier}: Already signed in today`);
+
+                continue;
+            }
+
+            // Mandatory part starts here
+            console.log(`Signing in as ${account.identifier}...`);
+            let postData = {
+                act_id: api[game].actId
+            };
+            let signInResult = await postJson(api[game].baseUrl + api[game].signIn + "?lang=en-us", headers, postData);
+            let signInResultJson = JSON.parse(signInResult.bodyData);
+
+            if (!signInResult || signInResultJson.retcode != 0) {
+                let warning = `Failed to sign in as ${account.identifier}: `;
+
+                if (!signInResult)
+                    warning += "Request error, see previous error";
+                else
+                    warning += signInResultJson.message;
+
+                console.warn(warning);
+                report.push(`${account.identifier}: Failed to sign in`);
+
+                continue;
+            }
+
+            let award = getAward(signInInfoJson.data.sign_cnt);
+            report.push(`${account.identifier}: Signed in! Got ${award.name} x${award.count}`);
         }
 
-        // This whole part is optional, but nice to have as to not rely on error messages of the POST request
-        console.log(`Checking sign info for ${account.identifier}...`);
-        let signInInfo = await get("https://sg-hk4e-api.hoyolab.com/event/sol/info?act_id=e202102251931481", headers);
-        let signInInfoJson = JSON.parse(signInInfo.bodyData);
-
-        if (!signInInfo || signInInfoJson.retcode != 0) {
-            let warning = `Failed to get sign info for ${account.identifier}: `;
-
-            if (!signInInfo)
-                warning += "Request error, see previous error";
-            else
-                warning += signInInfoJson.message;
-
-            console.warn(warning);
-            report.push(`${account.identifier}: Failed getting sign-in info`);
-
-            continue;
-        }
-
-        if (signInInfoJson.data.is_sign) {
-            console.warn(`${account.identifier} has already been signed in!`);
-            report.push(`${account.identifier}: Already signed in today`);
-
-            continue;
-        }
-
-        // Mandatory part starts here
-        console.log(`Signing in as ${account.identifier}...`);
-        let postData = {
-            act_id: "e202102251931481"
-        };
-        let signInResult = await postJson("https://sg-hk4e-api.hoyolab.com/event/sol/sign", headers, postData);
-        let signInResultJson = JSON.parse(signInResult.bodyData);
-
-        if (!signInResult || signInResultJson.retcode != 0) {
-            let warning = `Failed to sign in as ${account.identifier}: `;
-
-            if (!signInResult)
-                warning += "Request error, see previous error";
-            else
-                warning += signInResultJson.message;
-
-            console.warn(warning);
-            report.push(`${account.identifier}: Failed to sign in`);
-
-            continue;
-        }
-
-        let award = getAward(signInInfoJson.data.sign_cnt);
-        report.push(`${account.identifier}: Signed in! Got ${award.name} x${award.count}`);
+        report.push("");
     }
 
     if (!discordWebhookUrl)
@@ -127,11 +141,13 @@ async function main() {
         return true;
     });
 
+    console.log("Sending report to webhook...");
+
     headers = {
         "Content-Type": "application/json"
     };
     let webhookResponse = await postJson(discordWebhookUrl, headers, {
-        username: "HoYoLAB - Genshin Impact Auto Sign-In Report",
+        username: "HoYoLAB Auto Sign-In Report",
         avatar_url: "https://www.google.com/s2/favicons?sz=256&domain=hoyolab.com",
         content: report.join("\n")
     });
@@ -178,6 +194,8 @@ function postJson(url, headers, bodyDataObject) {
 }
 
 function setAwards(items) {
+    awardStore = [];
+
     for (const item of items) {
         awardStore.push({
             icon: item.icon,
