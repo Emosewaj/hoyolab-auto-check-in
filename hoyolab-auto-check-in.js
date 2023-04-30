@@ -120,7 +120,7 @@ async function main() {
                 continue;
             }
 
-            let award = getAward(signInInfoJson.data.sign_cnt);
+            let award = getAward(signInInfoJson.data.total_sign_day);
             report.push(`${account.identifier}: Signed in! Got ${award.name} x${award.count}`);
         }
 
