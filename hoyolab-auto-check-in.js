@@ -106,13 +106,15 @@ async function main() {
             let signInResult = await postJson(api[game].baseUrl + api[game].signIn + "?lang=en-us", headers, postData);
             let signInResultJson = JSON.parse(signInResult.bodyData);
 
-            if (!signInResult || signInResultJson.retcode != 0) {
+            if (!signInResult || signInResultJson.retcode != 0 || signInResultJson.data.gt_result.is_risk) {
                 let warning = `Failed to sign in as ${account.identifier}: `;
 
                 if (!signInResult)
                     warning += "Request error, see previous error";
-                else
+                else if (signInResultJson.retcode != 0)
                     warning += signInResultJson.message;
+                else if (signInResultJson.data.gt_result.is_risk)
+                    warning += "Encountered Captcha!";
 
                 console.warn(warning);
                 report.push(`${account.identifier}: Failed to sign in`);
