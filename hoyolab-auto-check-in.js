@@ -117,7 +117,7 @@ async function main() {
                     warning += "Encountered Captcha!";
 
                 console.warn(warning);
-                report.push(`${account.identifier}: Failed to sign in`);
+                report.push(`${account.identifier}: Failed to sign in: ${warning}`);
 
                 continue;
             }
