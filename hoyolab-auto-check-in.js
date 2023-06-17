@@ -86,7 +86,7 @@ async function main() {
                     warning += signInInfoJson.message;
 
                 console.warn(warning);
-                report.push(`${account.identifier}: Failed getting sign-in info`);
+                report.push(`${account.identifier}: Failed getting sign-in info: ${warning}`);
 
                 continue;
             }
