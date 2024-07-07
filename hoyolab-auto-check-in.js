@@ -86,7 +86,7 @@ async function main() {
                     warning += signInInfoJson.message;
 
                 console.warn(warning);
-                report.push(`❌ ${account.identifier}: Failed getting sign-in info: ${warning}`);
+                report.push(`⚠️ ${account.identifier}: Failed getting sign-in info: ${warning}`);
 
                 continue;
             }
@@ -106,7 +106,7 @@ async function main() {
             let signInResult = await postJson(api[game].baseUrl + api[game].signIn + "?lang=en-us", headers, postData);
             let signInResultJson = JSON.parse(signInResult.bodyData);
 
-            if (!signInResult || signInResultJson.retcode != 0 || signInResultJson.data.gt_result.is_risk) {
+            if (!signInResult || signInResultJson.retcode != 0 || (signInResultJson.data.gt_result && signInResultJson.data.gt_result.is_risk)) {
                 let warning = `Failed to sign in as ${account.identifier}: `;
 
                 if (!signInResult)
@@ -117,7 +117,7 @@ async function main() {
                     warning += "Encountered Captcha!";
 
                 console.warn(warning);
-                report.push(`❌ ${account.identifier}: Failed to sign in: ${warning}`);
+                report.push(`⚠️ ${account.identifier}: Failed to sign in: ${warning}`);
 
                 continue;
             }
