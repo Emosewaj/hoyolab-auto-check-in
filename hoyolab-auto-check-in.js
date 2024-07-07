@@ -35,7 +35,7 @@ const api = {
         awards: "home",
         signInInfo: "info",
         signIn: "sign",
-        name: "Genshin Impact"
+        name: "🌟 Genshin Impact ♔"
     },
     honkaiStarRail: {
         baseUrl: "https://sg-public-api.hoyolab.com/event/luna/os/",
@@ -43,7 +43,7 @@ const api = {
         awards: "home",
         signInInfo: "info",
         signIn: "sign",
-        name: "Honkai: Star Rail"
+        name: "🚂 Honkai: Star Rail 🌠"
     }
 };
 
@@ -86,14 +86,14 @@ async function main() {
                     warning += signInInfoJson.message;
 
                 console.warn(warning);
-                report.push(`${account.identifier}: Failed getting sign-in info: ${warning}`);
+                report.push(`❌ ${account.identifier}: Failed getting sign-in info: ${warning}`);
 
                 continue;
             }
 
             if (signInInfoJson.data.is_sign) {
                 console.warn(`${account.identifier} has already been signed in!`);
-                report.push(`${account.identifier}: Already signed in today`);
+                report.push(`☑️ ${account.identifier}: Already signed in today`);
 
                 continue;
             }
@@ -117,13 +117,13 @@ async function main() {
                     warning += "Encountered Captcha!";
 
                 console.warn(warning);
-                report.push(`${account.identifier}: Failed to sign in: ${warning}`);
+                report.push(`❌ ${account.identifier}: Failed to sign in: ${warning}`);
 
                 continue;
             }
 
             let award = getAward(signInInfoJson.data.total_sign_day);
-            report.push(`${account.identifier}: Signed in! Got ${award.name} x${award.count}`);
+            report.push(`✅ ${account.identifier}: Signed in! Got ${award.name} x${award.count}`);
         }
 
         report.push("");
