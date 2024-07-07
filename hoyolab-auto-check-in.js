@@ -135,7 +135,7 @@ async function main() {
     // Filter out accounts that shouldn't be announced (I was too lazy to do this beforehand so we're doing it here now lol)
     report = report.filter(line => {
         for (const account of accounts) {
-            if (!account.announce && line.startsWith(account.identifier)) {
+            if (!account.announce && line.includes(account.identifier)) {
                 return false;
             }
         }
