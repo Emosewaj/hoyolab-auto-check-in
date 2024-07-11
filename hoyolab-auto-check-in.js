@@ -45,6 +45,14 @@ const api = {
         signInInfo: "info",
         signIn: "sign",
         name: "🚂 Honkai: Star Rail 🌠"
+    },
+    zenlessZoneZero: {
+        baseUrl: "https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/",
+        actId: "e202406031448091",
+        awards: "home",
+        signInInfo: "info",
+        signIn: "sign",
+        name: "🐰 Zenless Zone Zero 📺"
     }
 };
 
