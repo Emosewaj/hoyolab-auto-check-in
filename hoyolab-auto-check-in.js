@@ -1,7 +1,8 @@
 const https = require("https");
 
-// Leave empty to disable reports
-const discordWebhookUrl = "";
+// Leave "discordWebhookUrl" in the config empty to disable reports
+const config = require("./config.json");
+
 let awardStore = [];
 
 /**
@@ -129,7 +130,7 @@ async function main() {
         report.push("");
     }
 
-    if (!discordWebhookUrl)
+    if (!config.discordWebhookUrl)
         return;
 
     // Filter out accounts that shouldn't be announced (I was too lazy to do this beforehand so we're doing it here now lol)
@@ -148,7 +149,7 @@ async function main() {
     headers = {
         "Content-Type": "application/json"
     };
-    let webhookResponse = await postJson(discordWebhookUrl, headers, {
+    let webhookResponse = await postJson(config.discordWebhookUrl, headers, {
         username: "HoYoLAB Auto Sign-In Report",
         avatar_url: "https://www.google.com/s2/favicons?sz=256&domain=hoyolab.com",
         content: report.join("\n")
