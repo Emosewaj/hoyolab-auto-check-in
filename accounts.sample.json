@@ -1,6 +1,7 @@
 [{
         "identifier": "Username/Displayname",
         "ltoken": "abcdefghijklmnopqrstuvwxyz0123456789ABCD",
+        "ltoken_v2": "v2_abcdefghijkmlnopqrstuvwxzy0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.-abcdefghijkmlnopqrstuvwxzy0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.-abcdefghijkmlnopqrstuvwxzy0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.-abcdefghijkmlnopqrstuvwxzy012",
         "ltuid": 12345678,
         "announce": true,
         "genshinImpact": true,
@@ -10,6 +11,7 @@
     {
         "identifier": "Username/Displayname",
         "ltoken": "abcdefghijklmnopqrstuvwxyz0123456789ABCD",
+        "ltoken_v2": "v2_abcdefghijkmlnopqrstuvwxzy0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.-abcdefghijkmlnopqrstuvwxzy0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.-abcdefghijkmlnopqrstuvwxzy0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.-abcdefghijkmlnopqrstuvwxzy012",
         "ltuid": 12345678,
         "announce": true,
         "genshinImpact": true,

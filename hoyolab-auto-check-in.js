@@ -77,8 +77,14 @@ async function main() {
                 continue;
 
             // Auth Headers used for every request. I have no idea if these expire eventually or if they're valid permanently. We'll see.
-            let headers = {
-                Cookie: `ltoken=${account.ltoken};ltuid=${account.ltuid}`
+            let headers = {}
+            if (account.ltoken && account.ltuid) {
+                headers.Cookie = `ltoken=${account.ltoken};ltuid=${account.ltuid}`;
+            } else if (account.ltoken_v2 && account.ltuid) {
+                headers.Cookie = `ltoken_v2=${account.ltoken};ltuid_v2=${account.ltuid}`
+            } else {
+                console.warn(`The account ${account.identifier} has no valid login information!`);
+                continue;
             }
 
             // This whole part is optional, but nice to have as to not rely on error messages of the POST request
