@@ -11,6 +11,7 @@ let awardStore = [];
  * @typedef {Object} Account
  * @property {string} identifier
  * @property {string} ltoken
+ * @property {string} ltoken_v2
  * @property {number} ltuid
  * @property {boolean} announce
  * @property {boolean} genshinImpact
@@ -81,7 +82,7 @@ async function main() {
             if (account.ltoken && account.ltuid) {
                 headers.Cookie = `ltoken=${account.ltoken};ltuid=${account.ltuid}`;
             } else if (account.ltoken_v2 && account.ltuid) {
-                headers.Cookie = `ltoken_v2=${account.ltoken};ltuid_v2=${account.ltuid}`
+                headers.Cookie = `ltoken_v2=${account.ltoken_v2};ltuid_v2=${account.ltuid}`
             } else {
                 console.warn(`The account ${account.identifier} has no valid login information!`);
                 continue;
