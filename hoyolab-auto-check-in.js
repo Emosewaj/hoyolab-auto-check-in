@@ -1,4 +1,5 @@
 const https = require("https");
+const util = require("util");
 
 // Leave "discordWebhookUrl" in the config empty to disable reports
 const config = require("./config.json");
@@ -30,6 +31,8 @@ let awardStore = [];
  */
 const accounts = require("./accounts.json");
 
+const debug = process.argv.includes("debug");
+
 const api = {
     genshinImpact: {
         baseUrl: "https://sg-hk4e-api.hoyolab.com/event/sol/",
@@ -53,19 +56,34 @@ const api = {
         awards: "home",
         signInInfo: "info",
         signIn: "sign",
-        name: "🐰 Zenless Zone Zero 📺"
+        name: "🐰 Zenless Zone Zero 📺",
+        extraHeaders: { "x-rpc-signgame": "zzz" }
     }
 };
 
 async function main() {
+    logDebug(["Debug log enabled, skipping login sections"]);
+
     let report = [];
 
     for (let game in api) {
+        if (debug && process.argv[3] && game != process.argv[3]) {
+            logDebug(["Skipping " + game]);
+            continue;
+        }
+
         console.log(`===== ${api[game].name} =====`);
         report.push(`__*${api[game].name}*__`);
 
+        let headers = {}
+        if (api[game].extraHeaders) {
+            for (let header in api[game].extraHeaders) {
+                headers[header] = api[game].extraHeaders[header];
+            }
+        }
+
         console.log("Fetching awards...");
-        let awardsInfo = await get(api[game].baseUrl + api[game].awards + "?lang=en-us&act_id=" + api[game].actId);
+        let awardsInfo = await get(api[game].baseUrl + api[game].awards + "?lang=en-us&act_id=" + api[game].actId, headers);
         let awardsInfoJson = JSON.parse(awardsInfo.bodyData);
 
         if (awardsInfo && awardsInfoJson.retcode == 0)
@@ -78,7 +96,6 @@ async function main() {
                 continue;
 
             // Auth Headers used for every request. I have no idea if these expire eventually or if they're valid permanently. We'll see.
-            let headers = {}
             if (account.ltoken && account.ltuid) {
                 headers.Cookie = `ltoken=${account.ltoken};ltuid=${account.ltuid}`;
             } else if (account.ltoken_v2 && account.ltuid) {
@@ -114,6 +131,11 @@ async function main() {
                 continue;
             }
 
+            if (debug) {
+                logDebug(["Skipping sign-in"]);
+                continue;
+            }
+
             // Mandatory part starts here
             console.log(`Signing in as ${account.identifier}...`);
             let postData = {
@@ -145,8 +167,10 @@ async function main() {
         report.push("");
     }
 
-    if (!config.discordWebhookUrl)
+    if (!config.discordWebhookUrl || debug) {
+        logDebug(["Skipping webhook"]);
         return;
+    }
 
     // Filter out accounts that shouldn't be announced (I was too lazy to do this beforehand so we're doing it here now lol)
     report = report.filter(line => {
@@ -177,12 +201,17 @@ async function main() {
 
 function get(url, headers) {
     return new Promise(resolve => {
+        logDebug(["Requesting URL: " + url, "Headers:", headers]);
+
         let request = https.get(url, {
             headers
         }, response => {
             response.bodyData = "";
             response.on("data", chunk => response.bodyData += chunk);
-            response.on("end", () => resolve(response));
+            response.on("end", () => {
+                logDebug(["Response:", response.bodyData]);
+                resolve(response);
+            });
             response.on("error", err => {
                 console.error(err);
                 resolve(false);
@@ -194,13 +223,18 @@ function get(url, headers) {
 
 function postJson(url, headers, bodyDataObject) {
     return new Promise(resolve => {
+        logDebug(["Posting JSON to URL: " + url, "Headers:", headers, "JSON:", bodyDataObject]);
+
         let request = https.request(url, {
             method: "POST",
             headers
         }, response => {
             response.bodyData = "";
             response.on("data", chunk => response.bodyData += chunk);
-            response.on("end", () => resolve(response));
+            response.on("end", () => {
+                logDebug(["Response: ", response.bodyData]);
+                resolve(response)
+            });
             response.on("error", err => {
                 console.error(err);
                 resolve(false);
@@ -240,6 +274,19 @@ function getAward(dayIndex) {
     }
 
     return item;
+}
+
+function logDebug(messages) {
+    if (!debug)
+        return;
+
+    messages.forEach(message => {
+        if (typeof message !== "string") {
+            console.log(util.inspect(message));
+        } else {
+            console.log("[DEBUG] " + message);
+        }
+    });
 }
 
 main();
